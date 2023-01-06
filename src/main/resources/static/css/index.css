@@ -1,7 +1,7 @@
-html, body, div, span, 
-h1, h2, h3, 
-p, pre, 
-a, b, i, 
+html, body, div, span,
+h1, h2, h3,
+p, pre,
+a, b, i,
 ol, ul,
 form, label,
 table, tbody, tfoot, thead, tr, th, td,
@@ -29,4 +29,8 @@ a {
 table {
     border-collapse: collapse;
     border-spacing: 0;
+}
+
+input, textarea, select {
+    box-sizing: border-box;
 }
