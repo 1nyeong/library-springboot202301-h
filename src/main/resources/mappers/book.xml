@@ -39,6 +39,74 @@
         <if test='limit == "Y"'>
             limit #{index}, #{count}
         </if>
-
     </select>
+
+    <select id="findBookByBookCode" resultType="com.korit.library.web.dto.BookMstDto">
+        SELECT
+        book_id as bookId,
+        book_code as bookCode,
+        book_name as bookName,
+        author,
+        publisher,
+        publication_date as publicationDate,
+        category
+        from
+        book_mst
+        where
+        book_code = #{bookCode};
+    </select>
+
+    <select id="findAllCategory" resultType="com.korit.library.web.dto.CategoryDto">
+        select
+        category_id,
+        category
+        from
+        category_view
+    </select>
+
+    <insert id="saveBook" parameterType="com.korit.library.web.dto.BookReqDto">
+        insert into book_mst
+        values
+        (0, #{bookCode}, #{bookName}, #{author}, #{publisher}, #{publicationDate}, #{category})
+    </insert>
+
+    <update id="updateBookByBookCode" parameterType="com.korit.library.web.dto.BookReqDto">
+        update book_mst
+        set
+        book_name = #{bookName},
+        author = if(#{author} = '', null, #{author}),
+        publisher = if(#{publisher} = '', null, #{publisher}),
+        publication_date = if(#{publicationDate} = '', null, #{publicationDate}),
+        category = #{category}
+        where
+        book_code = #{bookCode}
+    </update>
+
+    <update id="maintainUpdateBookByBookCode" parameterType="com.korit.library.web.dto.BookReqDto">
+        update book_mst
+        set
+        book_name = #{bookName},
+        <if test='author != null and author != ""'>author = #{author},</if>
+        <if test='publisher != null and publisher != ""'>publisher = #{publisher},</if>
+        <if test='publicationDate != null'>publication_date = #{publicationDate},</if>
+        category = #{category}
+        where
+        book_code = #{bookCode}
+    </update>
+
+    <delete id="deleteBook">
+        delete
+        from
+        book_mst
+        where
+        book_code = #{bookCode}
+    </delete>
+
+    <insert id="registerBookImages" parameterType="list">
+        insert into book_image
+        values
+        <foreach collection="list" item="file" separator=",">
+            (0, #{file.bookCode}, #{file.saveName}, #{file.originName})
+        </foreach>
+    </insert>
 </mapper>
