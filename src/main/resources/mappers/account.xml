@@ -3,94 +3,88 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.korit.library.repository.BookRepository">
-    <select id="searchBook" parameterType="com.korit.library.web.dto.SearchReqDto" resultType="com.korit.library.web.dto.BookMstDto">
-        SELECT
-        book_id as bookId,
-        book_code as bookCode,
-        book_name as bookName,
-        author,
-        publisher,
-        publication_date as publicationDate,
-        category
-        from
-        book_mst
-        where
-        1 = 1
-        <if test="searchValue != null">
-            and (
-            book_name like CONCAT('%', #{searchValue}, '%')
-            or	author like CONCAT('%', #{searchValue}, '%')
-            or	publisher like CONCAT('%', #{searchValue}, '%')
-            )
-        </if>
-        <if test="category != null">
-            and	category = #{category}
-        </if>
+<mapper namespace="com.korit.library.repository.AccountRepository">
 
-        order by
-        <choose>
-            <when test='order == "bookName"'>book_name,</when>
-            <when test='order == "author"'>author,</when>
-            <when test='order == "dateAsc"'>publication_date,</when>
-            <when test='order == "dateDesc"'>publication_date desc,</when>
-        </choose>
-        book_id
-        <if test='limit == "Y"'>
-            limit #{index}, #{count}
-        </if>
-    </select>
+    <resultMap id="userMst" type="com.korit.library.entity.UserMst">
+        <result property="userId" column="user_id"></result>
+        <result property="username" column="username"></result>
+        <result property="password" column="password"></result>
+        <result property="name" column="name"></result>
+        <result property="email" column="email"></result>
+        <result property="createDate" column="create_date"></result>
+        <result property="updateDate" column="update_date"></result>
+        <collection property="roleDtl" javaType="list" resultMap="roleDtl"></collection>
+    </resultMap>
 
-    <select id="findBookByBookCode" resultType="com.korit.library.web.dto.BookMstDto">
-        SELECT
-        book_id as bookId,
-        book_code as bookCode,
-        book_name as bookName,
-        author,
-        publisher,
-        publication_date as publicationDate,
-        category
-        from
-        book_mst
-        where
-        book_code = #{bookCode};
-    </select>
+    <resultMap id="roleDtl" type="com.korit.library.entity.RoleDtl">
+        <result property="roleDtlId" column="role_dtl_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="roleId" column="role_id"></result>
+        <result property="createDate" column="create_date"></result>
+        <result property="updateDate" column="update_date"></result>
+        <collection property="roleMst" resultMap="roleMst"></collection>
+    </resultMap>
 
-    <select id="findAllCategory" resultType="com.korit.library.web.dto.CategoryDto">
+    <resultMap id="roleMst" type="com.korit.library.entity.RoleMst">
+        <result property="roleId" column="role_id"></result>
+        <result property="roleName" column="role_name"></result>
+        <result property="createDate" column="create_date"></result>
+        <result property="updateDate" column="update_date"></result>
+    </resultMap>
+
+
+    <select id="findUserByUsername" parameterType="String" resultMap="userMst">
         select
-        category_id,
-        category
+        um.user_id,
+        um.username,
+        um.password,
+        um.name,
+        um.email,
+
+        rd.role_id,
+        rm.role_name,
+
+        um.create_date,
+        um.update_date
         from
-        category_view
+        user_mst um
+        left outer join role_dtl rd on(rd.user_id = um.user_id)
+        left outer join role_mst rm on(rm.role_id = rd.role_id)
+        where
+        um.username = #{username}
+    </select>
+    <select id="findUserByUserId" parameterType="Integer" resultMap="userMst">
+        select
+        um.user_id,
+        um.username,
+        um.password,
+        um.name,
+        um.email,
+
+        rd.role_id,
+        rm.role_name,
+
+        um.create_date,
+        um.update_date
+        from
+        user_mst um
+        left outer join role_dtl rd on(rd.user_id = um.user_id)
+        left outer join role_mst rm on(rm.role_id = rd.role_id)
+        where
+        um.user_id = #{userId}
     </select>
 
-    <insert id="saveBook" parameterType="com.korit.library.web.dto.BookReqDto">
-        insert into book_mst
-        values
-        (0, #{bookCode}, #{bookName}, #{author}, #{publisher}, #{publicationDate}, #{category})
+    <insert id="saveUser"
+            parameterType="com.korit.library.entity.UserMst"
+            useGeneratedKeys="true"
+            keyProperty="userId">
+        insert into user_mst
+        values (0, #{username}, #{password}, #{name}, #{email}, now(), now())
     </insert>
 
-    <update id="updateBookByBookCode" parameterType="com.korit.library.web.dto.BookReqDto">
-        update book_mst
-        set
-        book_name = #{bookName},
-        author = if(#{author} = '', null, #{author}),
-        publisher = if(#{publisher} = '', null, #{publisher}),
-        publication_date = if(#{publicationDate} = '', null, #{publicationDate}),
-        category = #{category}
-        where
-        book_code = #{bookCode}
-    </update>
+    <insert id="saveRole" parameterType="com.korit.library.entity.UserMst">
+        insert into role_dtl
+        values (0, #{userId}, 1, now(), now())
+    </insert>
 
-    <update id="maintainUpdateBookByBookCode" parameterType="com.korit.library.web.dto.BookReqDto">
-        update book_mst
-        set
-        book_name = #{bookName},
-        <if test='author != null'>author = if(#{author} = '', null, #{author}),</if>
-        <if test='publisher != null'>publisher = if(#{publisher} = '', null, #{publisher}),</if>
-        <if test='publicationDate != null'>publication_date = if(#{publicationDate} = '', null, #{publicationDate}),</if>
-        category = #{category}
-        where
-        book_code = #{bookCode}
-    </update>
 </mapper>
