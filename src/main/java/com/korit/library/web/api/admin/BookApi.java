@@ -1,7 +1,7 @@
 package com.korit.library.web.api.admin;
 
-import com.korit.library.aop.annotation.ParamsAspect;
-import com.korit.library.aop.annotation.ValidAspect;
+import com.korit.library.config.aop.annotation.ParamsAspect;
+import com.korit.library.config.aop.annotation.ValidAspect;
 import com.korit.library.entity.BookImage;
 import com.korit.library.entity.BookMst;
 import com.korit.library.entity.CategoryView;
@@ -21,6 +21,7 @@ import java.util.List;
 @Api(tags = {"관리자 도서관리 API"})
 @RequestMapping("/api/admin")
 @RestController
+//@CrossOrigin(origins = "http://172.30.64.1:5500")
 public class BookApi {
 
     @Autowired
@@ -111,12 +112,3 @@ public class BookApi {
     }
 
 }
-
-
-
-
-
-
-
-
-

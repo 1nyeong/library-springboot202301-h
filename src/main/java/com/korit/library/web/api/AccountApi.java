@@ -1,6 +1,6 @@
 package com.korit.library.web.api;
 
-import com.korit.library.aop.annotation.ValidAspect;
+import com.korit.library.config.aop.annotation.ValidAspect;
 import com.korit.library.web.dto.CMRespDto;
 import com.korit.library.security.PrincipalDetails;
 import com.korit.library.service.AccountService;

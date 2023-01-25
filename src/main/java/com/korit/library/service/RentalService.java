@@ -45,6 +45,7 @@ public class RentalService {
 
 
 
+
     private void availability(int userId) {
         int rentalCount = rentalRepository.rentalAvailability(userId);
         if(rentalCount > 2) {

@@ -1,6 +1,6 @@
 package com.korit.library.security;
 
-import com.korit.library.aop.annotation.ParamsAspect;
+import com.korit.library.config.aop.annotation.ParamsAspect;
 import com.korit.library.repository.AccountRepository;
 import com.korit.library.entity.UserMst;
 import lombok.extern.slf4j.Slf4j;

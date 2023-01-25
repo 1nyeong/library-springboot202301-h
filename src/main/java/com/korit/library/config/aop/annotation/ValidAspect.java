@@ -1,4 +1,4 @@
-package com.korit.library.aop.annotation;
+package com.korit.library.config.aop.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -45,7 +45,7 @@ public class PrincipalDetails implements UserDetails {
 
 //        user.getRoleDtlDto().forEach(dtl -> {
 //            authorities.add(() -> dtl.getRoleMstDto().getRoleName());
-//        });
+//        });   
 
         return authorities;
     }

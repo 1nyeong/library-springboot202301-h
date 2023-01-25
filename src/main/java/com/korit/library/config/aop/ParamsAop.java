@@ -1,4 +1,4 @@
-package com.korit.library.aop;
+package com.korit.library.config.aop;
 
 import com.korit.library.exception.CustomValidationException;
 import lombok.extern.slf4j.Slf4j;
