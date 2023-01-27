@@ -21,7 +21,7 @@ import java.util.List;
 @Api(tags = {"관리자 도서관리 API"})
 @RequestMapping("/api/admin")
 @RestController
-//@CrossOrigin(origins = "http://172.30.64.1:5500")
+//@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class BookApi {
 
     @Autowired
@@ -34,6 +34,13 @@ public class BookApi {
         return ResponseEntity
                 .ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", bookService.searchBook(searchReqDto)));
+    }
+
+    @GetMapping("/books/totalcount")
+    public ResponseEntity<CMRespDto<?>> getBookTotalCount(SearchNumberListReqDto searchNumberListReqDto) {
+        return ResponseEntity
+                .ok()
+                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", bookService.getBookTotalCount(searchNumberListReqDto)));
     }
 
     @GetMapping("/categories")
@@ -84,6 +91,15 @@ public class BookApi {
     }
 
     @ParamsAspect
+    @DeleteMapping("/books")
+    public ResponseEntity<CMRespDto<?>> removeBooks(@RequestBody DeleteBooksReqDto deleteBooksReqDto) {
+        bookService.removeBooks(deleteBooksReqDto);
+        return ResponseEntity
+                .ok()
+                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", true));
+    }
+
+    @ParamsAspect
     @PostMapping("/book/{bookCode}/images")
     public ResponseEntity<CMRespDto<?>> registerBookImg(@PathVariable String bookCode, @RequestPart List<MultipartFile> files) {
         bookService.registerBookImages(bookCode, files);
@@ -112,3 +128,12 @@ public class BookApi {
     }
 
 }
+
+
+
+
+
+
+
+
+
